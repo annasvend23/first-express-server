@@ -1,6 +1,6 @@
 # First express server
 
-## Version 1.0.0
+## Version 1.0.1
 
 This project was created to demonstrate my node.js and express.js skills.
 
@@ -8,6 +8,6 @@ This project was created to demonstrate my node.js and express.js skills.
 
 ### Setup
 
-1. git clone *https://annasvend23.github.io/first-express-server/*;
+1. git clone *https://github.com/annasvend23/first-express-server.git*;
 2. `npm inslall`;
 3. `npm run dev` - this would start server in watch mode;

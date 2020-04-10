@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
+const logger = require('./logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -16,5 +17,5 @@ app.use('*', (req, res) => {
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
-  console.log(`App listening on port ${PORT}`);
+  logger.log(`App listening on port ${PORT}`);
 });

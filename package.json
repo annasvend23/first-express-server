@@ -1,6 +1,6 @@
 {
   "name": "first-server",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "My first server using node and express js",
   "main": "app.js",
   "scripts": {
