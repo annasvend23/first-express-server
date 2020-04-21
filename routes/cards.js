@@ -1,19 +1,13 @@
 const router = require('express').Router();
-const path = require('path');
-const readFile = require('./read-file');
-const logger = require('../logger');
+const {
+  getCards, createCard, deleteCard, likeCard, removeLikeCard,
+} = require('../controllers/cards');
 
-const cardsFilePath = path.join(__dirname, '../data/cards.json');
 
-router.get('/', (req, res) => {
-  readFile(cardsFilePath)
-    .then((cards) => {
-      res.send(cards);
-    })
-    .catch((err) => {
-      logger.error(err);
-      res.status(500).send({ messege: 'Что-то пошло не так' });
-    });
-});
+router.get('/', getCards);
+router.post('/', createCard);
+router.delete('/:cardId', deleteCard);
+router.put('/:cardId/likes', likeCard);
+router.delete('/:cardId/likes', removeLikeCard);
 
-module.exports = router; // экспортировали роутер
+module.exports = router;
