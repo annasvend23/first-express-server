@@ -1,5 +1,4 @@
 const User = require('../models/user');
-const logger = require('../logger');
 
 const createUser = (req, res) => {
   const { name, about, avatar } = req.body;
@@ -7,7 +6,7 @@ const createUser = (req, res) => {
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: err.message });
     });
 };
@@ -16,7 +15,7 @@ const getUsers = (req, res) => {
   User.find({})
     .then((users) => res.send({ data: users }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
@@ -33,7 +32,7 @@ const getUserById = (req, res) => {
       }
     })
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
@@ -47,7 +46,7 @@ const updateProfile = (req, res) => {
   })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
@@ -61,7 +60,7 @@ const updateAvatar = (req, res) => {
   })
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };

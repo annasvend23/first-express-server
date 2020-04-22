@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const logger = require('./logger');
 
 const { PORT = 3000 } = process.env;
 
@@ -33,5 +32,5 @@ app.use('*', (req, res) => {
 
 app.listen(PORT, () => {
   // Если всё работает, консоль покажет, какой порт приложение слушает
-  logger.log(`App listening on port ${PORT}`);
+  console.warn(`App listening on port ${PORT}`);
 });

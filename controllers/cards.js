@@ -1,11 +1,10 @@
 const Card = require('../models/card');
-const logger = require('../logger');
 
 const getCards = (req, res) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
@@ -17,7 +16,7 @@ const createCard = (req, res) => {
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
@@ -32,7 +31,7 @@ const deleteCard = (req, res) => {
       }
     })
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
@@ -45,7 +44,7 @@ const likeCard = (req, res) => {
   )
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
@@ -58,7 +57,7 @@ const removeLikeCard = (req, res) => {
   )
     .then((card) => res.send({ data: card }))
     .catch((err) => {
-      logger.error(err);
+      console.error(err);
       res.status(500).send({ message: 'Что-то пошло не так' });
     });
 };
