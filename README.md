@@ -1,10 +1,10 @@
 # First express server
 
-## Version 1.0.1
+## Version 2.0.1
 
-This project was created to demonstrate my node.js and express.js skills.
+This project was created to demonstrate my express.js and mongoDB skills.
 
-**Technologies**: JavaScript, GIT, Node.js, express.js
+**Technologies**: JavaScript, GIT, Node.js, express.js, mongoDB, mongoose
 
 ### Setup
 
