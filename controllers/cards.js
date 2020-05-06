@@ -22,13 +22,20 @@ const createCard = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  const user = req.user._id;
+
+  Card.findById(req.params.cardId)
     .then((card) => {
-      if (card) {
-        res.send({ data: card });
-      } else {
-        res.status(404).send({ message: 'Нет карточки с таким id' });
+      if (!card) {
+        return res.status(404).send({ message: 'Нет карточки с таким id' });
       }
+      if (!card.owner.equals(user)) {
+        return res.status(403).send({ message: 'Вы не можете удалить эту карточку' });
+      }
+      return Card.deleteOne({ _id: req.params.cardId })
+        .then(() => {
+          res.send({ data: card });
+        });
     })
     .catch((err) => {
       console.error(err);
