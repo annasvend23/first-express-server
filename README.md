@@ -1,8 +1,9 @@
 # First express server
 
-## Version 2.0.1
+## Version 3.0.1
 
 This project was created to demonstrate my express.js and mongoDB skills.
+I've implemented the creation of unique users, authentication, authorization, updating user information. Also, the user can create and delete their own cards, set and delete likes to cards.
 
 **Technologies**: JavaScript, GIT, Node.js, express.js, mongoDB, mongoose
 
