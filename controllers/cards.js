@@ -1,72 +1,59 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/not-found-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   Card.find({})
     .then((cards) => res.send({ data: cards }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user._id;
 
   Card.create({ name, link, owner })
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const user = req.user._id;
 
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        return res.status(404).send({ message: 'Нет карточки с таким id' });
+        throw new NotFoundError('Нет карточки с таким id');
       }
       if (!card.owner.equals(user)) {
-        return res.status(403).send({ message: 'Вы не можете удалить эту карточку' });
+        throw new ForbiddenError('Вы не можете удалить эту карточку');
       }
       return Card.deleteOne({ _id: req.params.cardId })
         .then(() => {
           res.send({ data: card });
         });
     })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
-const likeCard = (req, res) => {
+const likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
-const removeLikeCard = (req, res) => {
+const removeLikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true },
   )
     .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
 module.exports = {
