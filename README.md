@@ -12,3 +12,6 @@ I've implemented the creation of unique users, authentication, authorization, up
 1. git clone *https://github.com/annasvend23/first-express-server.git*;
 2. `npm inslall`;
 3. `npm run dev` - this would start server in watch mode;
+
+Production domain: *https://project-mesto.host/*;
+Public IP: 84.201.171.217;
