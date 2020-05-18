@@ -14,4 +14,5 @@ I've implemented the creation of unique users, authentication, authorization, up
 3. `npm run dev` - this would start server in watch mode;
 
 Production domain: *https://project-mesto.host/*;
+Production API: *https://api.project-mesto.host/*;
 Public IP: 84.201.171.217;

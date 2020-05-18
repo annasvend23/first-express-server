@@ -23,13 +23,13 @@ const userSchema = new mongoose.Schema({
       validator: (value) => validator.isURL(value),
       message: (props) => `${props.value} - невалидная ссылка!`,
     },
-    required: [true, 'Обязательное поле!'],
+    required: [true, 'Обязательное поле'],
   },
   email: {
     type: String,
     validate: {
       validator: (value) => validator.isEmail(value),
-      message: (props) => `${props.value} - невалидная почта!`,
+      message: (props) => `${props.value} - невалидная почта`,
     },
     required: true,
     unique: true,
@@ -46,12 +46,12 @@ userSchema.statics.findUserByCredentials = function findUserByCredentials(email,
   return this.findOne({ email }).select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль!'));
+        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
       }
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль!'));
+            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
           }
 
           return user;

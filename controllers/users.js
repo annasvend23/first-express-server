@@ -6,6 +6,7 @@ const NotFoundError = require('../errors/not-found-err');
 const BadRequestError = require('../errors/bad-request-err');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
+const MIN_PASSWORD_LENGTH = 8;
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -34,8 +35,8 @@ const createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
 
-  if (!password || password.length < 8) {
-    throw BadRequestError('Минимальная длина пароля 8 символов');
+  if (!password || password.length < MIN_PASSWORD_LENGTH) {
+    throw BadRequestError(`Минимальная длина пароля ${MIN_PASSWORD_LENGTH} символов`);
   }
 
   return bcrypt.hash(password, 10)

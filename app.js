@@ -14,6 +14,7 @@ const { login, createUser } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
+const validateUrl = require('./helpers/validate-url');
 
 const { PORT = 3000 } = process.env;
 
@@ -57,7 +58,7 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     about: Joi.string().required().min(2).max(30),
-    avatar: Joi.string().required().uri(),
+    avatar: Joi.string().required().custom(validateUrl),
     email: Joi.string().required().email(),
     password: Joi.string().required().min(8),
   }),
