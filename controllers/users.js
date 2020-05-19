@@ -1,10 +1,14 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+
 const User = require('../models/user');
+const NotFoundError = require('../errors/not-found-err');
+const BadRequestError = require('../errors/bad-request-err');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
+const MIN_PASSWORD_LENGTH = 8;
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
 
   return User.findUserByCredentials(email, password)
@@ -23,18 +27,16 @@ const login = (req, res) => {
         })
         .end();
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch(next);
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
 
-  if (!password || password.length < 8) {
-    return res.status(400).send({ message: 'Минимальная длина пароля 8 символов' });
+  if (!password || password.length < MIN_PASSWORD_LENGTH) {
+    throw BadRequestError(`Минимальная длина пароля ${MIN_PASSWORD_LENGTH} символов`);
   }
 
   return bcrypt.hash(password, 10)
@@ -47,21 +49,20 @@ const createUser = (req, res) => {
       },
     }))
     .catch((err) => {
-      console.error(err);
-      res.status(400).send({ message: err.message });
+      if (err.code === 11000) {
+        return next(new BadRequestError('Пользователь с такой почтой уже есть в базе'));
+      }
+      return next(err);
     });
 };
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   User.find({})
     .then((users) => res.send({ data: users }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
-const getUserById = (req, res) => {
+const getUserById = (req, res, next) => {
   const { userId } = req.params;
 
   User.findById(userId)
@@ -69,16 +70,13 @@ const getUserById = (req, res) => {
       if (user) {
         res.send({ data: user });
       } else {
-        res.status(404).send({ message: 'Нет пользователя с таким id' });
+        throw new NotFoundError('Нет пользователя с таким id');
       }
     })
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
-const updateProfile = (req, res) => {
+const updateProfile = (req, res, next) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, req.body, {
     new: true,
@@ -86,13 +84,10 @@ const updateProfile = (req, res) => {
     upsert: true,
   })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
-const updateAvatar = (req, res) => {
+const updateAvatar = (req, res, next) => {
   const userId = req.user._id;
   User.findByIdAndUpdate(userId, req.body, {
     new: true,
@@ -100,10 +95,7 @@ const updateAvatar = (req, res) => {
     upsert: true,
   })
     .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      console.error(err);
-      res.status(500).send({ message: 'Что-то пошло не так' });
-    });
+    .catch(next);
 };
 
 module.exports = {
