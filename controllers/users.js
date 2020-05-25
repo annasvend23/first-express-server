@@ -25,10 +25,26 @@ const login = (req, res, next) => {
           httpOnly: true,
           sameSite: true,
         })
-        .end();
+        .cookie('isAuthorized', true, {
+          maxAge: 3600000 * 24 * 7,
+          sameSite: true,
+        })
+        .send({});
     })
     .catch(next);
 };
+
+const logout = (req, res) => res
+  .cookie('jwt', '', {
+    maxAge: 0,
+    httpOnly: true,
+    sameSite: true,
+  })
+  .cookie('isAuthorized', false, {
+    maxAge: 0,
+    sameSite: true,
+  })
+  .send({});
 
 const createUser = (req, res, next) => {
   const {
@@ -43,11 +59,29 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send({
-      data: {
-        _id: user._id, name, about, avatar, email,
-      },
-    }))
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret',
+        { expiresIn: '7d' },
+      );
+
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 24 * 7,
+          httpOnly: true,
+          sameSite: true,
+        })
+        .cookie('isAuthorized', true, {
+          maxAge: 3600000 * 24 * 7,
+          sameSite: true,
+        })
+        .send({
+          data: {
+            _id: user._id, name, about, avatar, email,
+          },
+        });
+    })
     .catch((err) => {
       if (err.code === 11000) {
         return next(new BadRequestError('Пользователь с такой почтой уже есть в базе'));
@@ -63,7 +97,7 @@ const getUsers = (req, res, next) => {
 };
 
 const getUserById = (req, res, next) => {
-  const { userId } = req.params;
+  const userId = req.params.userId || req.user._id;
 
   User.findById(userId)
     .then((user) => {
@@ -99,5 +133,5 @@ const updateAvatar = (req, res, next) => {
 };
 
 module.exports = {
-  login, createUser, getUsers, getUserById, updateProfile, updateAvatar,
+  login, logout, createUser, getUsers, getUserById, updateProfile, updateAvatar,
 };
