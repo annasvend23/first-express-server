@@ -7,10 +7,11 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { celebrate, Joi } = require('celebrate');
 const { errors } = require('celebrate');
+const cors = require('cors');
 
 const usersRouter = require('./routes/users');
 const cardsRouter = require('./routes/cards');
-const { login, createUser } = require('./controllers/users');
+const { login, createUser, logout } = require('./controllers/users');
 const auth = require('./middlewares/auth');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const NotFoundError = require('./errors/not-found-err');
@@ -20,6 +21,7 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
+app.use(cors({ credentials: true, origin: ['http://localhost:8080', 'http://project-mesto.host', 'https://project-mesto.host'] }));
 app.use(helmet());
 app.use(cookieParser());
 
@@ -58,6 +60,7 @@ app.post('/signup', celebrate({
   }),
 }), createUser);
 
+app.use('/signout', auth, logout);
 app.use('/users', auth, usersRouter);
 app.use('/cards', auth, cardsRouter);
 app.use('*', () => {
