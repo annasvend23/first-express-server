@@ -21,7 +21,7 @@ const { PORT = 3000 } = process.env;
 
 const app = express();
 
-app.use(cors({ credentials: true, origin: ['http://localhost:8080', 'http://project-mesto.host', 'https://project-mesto.host'] }));
+app.use(cors({ credentials: true, origin: ['http://localhost:8080', 'http://www.project-mesto.host', 'https://www.project-mesto.host'] }));
 app.use(helmet());
 app.use(cookieParser());
 
