@@ -24,10 +24,12 @@ const login = (req, res, next) => {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: true,
+          domain: 'project-mesto.host',
         })
         .cookie('isAuthorized', true, {
           maxAge: 3600000 * 24 * 7,
           sameSite: true,
+          domain: 'project-mesto.host',
         })
         .send({});
     })
@@ -39,10 +41,12 @@ const logout = (req, res) => res
     maxAge: 0,
     httpOnly: true,
     sameSite: true,
+    domain: 'project-mesto.host',
   })
   .cookie('isAuthorized', false, {
     maxAge: 0,
     sameSite: true,
+    domain: 'project-mesto.host',
   })
   .send({});
 
@@ -71,10 +75,12 @@ const createUser = (req, res, next) => {
           maxAge: 3600000 * 24 * 7,
           httpOnly: true,
           sameSite: true,
+          domain: 'project-mesto.host',
         })
         .cookie('isAuthorized', true, {
           maxAge: 3600000 * 24 * 7,
           sameSite: true,
+          domain: 'project-mesto.host',
         })
         .send({
           data: {
